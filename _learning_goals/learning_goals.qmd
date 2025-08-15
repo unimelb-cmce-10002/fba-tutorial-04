@@ -3,6 +3,10 @@
 
 By the end of this tutorial, you should be able to:
 
-- COMPLETE THIS
-- WITH MULTIPLE BULLETS
+* Calculate and interpret key financial metrics – Use `mutate()` to create measures such as profit margin, asset turnover, and ROIC, and explain what these reveal about a firm’s strategic approach.  
+* Visualise variable distributions – Use `ggplot2` to produce and interpret histograms for financial ratios, identify issues such as outliers, and explain how data pruning affects interpretation.  
+* Explore relationships between firm strategy variables – Create scatterplots to examine how profit margin and asset turnover interact, and classify firms into strategy types (e.g., high margin, high volume, superstar, sinking ship).  
+* Identify and profile firms at distribution extremes – Use `filter()`, `arrange()`, `select()`, and `slice_max()` to locate firms with exceptional margins, volumes, or profitability, and interpret these outliers in context.  
+* Analyse strategy by grouping variables – Apply `group_by()` and `summarise()` to compare strategy types across industries, firm sizes, and profitability tiers.  
+* Present comparative visualisations – Use faceted scatterplots, size/colour encodings, and stacked bar charts to reveal variation in firm strategy across sectors and performance categories.  
 :::
