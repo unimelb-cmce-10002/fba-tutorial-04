@@ -54,27 +54,32 @@ scatter_size <-
            )
 
 scatter_return <- 
-    firm_strategy |> 
-    filter(profit_margin > -2) |> 
+    firm_strategy %>% 
+    filter(profit_margin > -2) %>% 
     ggplot() + 
     geom_point(aes(x = asset_turnover, y = profit_margin, 
                    fill = cut(roic, 
-                              breaks = 3, 
-                              labels = c("Low", "Medium", "High")
-                              )
+                   breaks = 3, labels = c("Low", "Medium", "High")
+                        )
                    ), 
-                alpha = 0.7, shape = 21, color = "black", size = 4) + 
-    geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
-               linetype = "dashed", color = "blue", size = 1) + 
-    geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
-               linetype = "dashed", color = "blue", size = 1) + 
-    scale_fill_manual(values = c("Low" = "red", "Medium" = "orange", "High" = "green")) + 
-    theme_minimal() + 
-    labs(title = "Firm Strategy", 
+                   alpha = 0.7, shape = 21, color = "black", size = 4) + 
+        geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
+                   linetype = "dashed", 
+                   color = "blue", 
+                   size = 1
+                   ) + 
+        geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
+                   linetype = "dashed", 
+                   color = "blue", 
+                   size = 1
+                   ) + 
+        scale_fill_okabe_ito() +
+        theme_minimal() + 
+        labs(title = "Firm Strategy: Large Australian Public Companies (2024)", 
              x = "Asset Turnover", 
              y = "Profit Margin") + 
-    guides(color = guide_legend(title = NULL), 
-           fill = guide_legend(title = "ROIC")
+        guides(color = guide_legend(title = NULL), 
+               fill = guide_legend(title = "ROIC")
            )
 
 scatter_return /
@@ -94,15 +99,19 @@ scatter_ind <-
     filter(profit_margin > -2 & industry %in% big_industries) |> 
     ggplot() + 
     geom_point(aes(x = asset_turnover, y = profit_margin, fill = industry), 
-               alpha = 0.7, shape = 21, size = 3, color = "black") +
+               alpha = 0.7, shape = 21, size = 3
+               ) + # shape = 21 allows filling
     geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
-               linetype = "dashed", color = "blue", size = 1) + 
+               linetype = "dashed", color = "blue", size = 1
+               ) + 
     geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
-               linetype = "dashed", color = "blue", size = 1) + 
+               linetype = "dashed", color = "blue", size = 1
+               ) + 
+    scale_fill_okabe_ito() +
     theme_minimal() + 
     labs(title = "Firm Strategy", 
-             x = "Asset Turnover", 
-             y = "Profit Margin") + 
+         x = "Asset Turnover", 
+         y = "Profit Margin") + 
     guides(color = guide_legend(title = NULL), 
            fill = guide_legend(title = "Industry"))
 
@@ -117,18 +126,24 @@ scatter_size <-
     filter(profit_margin > -2) |> 
     ggplot() + 
     YOUR_FUNCTION_NAME(aes(x = asset_turnover, y = profit_margin, 
-                           size = YOUR_VARIABLE_NAME),  
-                        alpha = 0.7, color = "black") +
+                           size = YOUR_VARIABLE_NAME
+                           ),  
+                       alpha = 0.7, color = "black"
+                       ) +
     geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
-               linetype = "dashed", color = "blue", size = 1) + 
+               linetype = "dashed", color = "blue", size = 1
+               ) + 
     geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
-                   linetype = "dashed", color = "blue", size = 1) + 
+               linetype = "dashed", color = "blue", size = 1
+               ) + 
     theme_minimal() + 
     labs(title = "Firm Strategy", 
-             x = "Asset Turnover", 
-             y = "Profit Margin") + 
+         x = "Asset Turnover", 
+         y = "Profit Margin"
+         ) + 
     guides(color = guide_legend(title = NULL), 
-           size = guide_legend(title = "YOUR_VARIABLE_NAME"))
+           size = guide_legend(title = "YOUR_VARIABLE_NAME")
+           )
 
 scatter_size
 ```
@@ -142,22 +157,26 @@ scatter_return <-
     ggplot() + 
     YOUR_FUNCTION_NAME(aes(x = asset_turnover, y = profit_margin, 
                            fill = cut(YOUR_VARIABLE_NAME, 
-                                      breaks = 3, 
-                                      labels = c("Low", "Medium", "High")
+                                      breaks = 3, labels = c("Low", "Medium", "High")
                                       )
                            ), 
-                 alpha = 0.7, shape = 21, color = "black", size = 4) + 
-      geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
-                 linetype = "dashed", color = "blue", size = 1) + 
-      geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
-                 linetype = "dashed", color = "blue", size = 1) + 
-      scale_fill_manual(values = c("Low" = "red", "Medium" = "orange", "High" = "green")) + 
-      theme_minimal() + 
-      labs(title = "Firm Strategy", 
-           x = "Asset Turnover", 
-           y = "Profit Margin") + 
-      guides(color = guide_legend(title = NULL), 
-             fill = guide_legend(title = "YOUR VARIABLE NAME"))
+                       alpha = 0.7, shape = 21, color = "black", size = 4
+                       ) + 
+    geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
+               linetype = "dashed", color = "blue", size = 1
+               ) + 
+    geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
+               linetype = "dashed", color = "blue", size = 1
+               ) + 
+    scale_fill_okabe_ito() +
+    theme_minimal() + 
+    labs(title = "Firm Strategy: Large Australian Public Companies (2024)", 
+         x = "Asset Turnover", 
+         y = "Profit Margin"
+         ) + 
+    guides(color = guide_legend(title = NULL), 
+           fill = guide_legend(title = "ROIC")
+           )
 
 scatter_return
 ```
@@ -250,17 +269,22 @@ scatter_size <-
     filter(profit_margin > -2) |> 
     ggplot() + 
     geom_point(aes(x = asset_turnover, y = profit_margin, size = at), 
-                   alpha = 0.7, color = "black") +
+               alpha = 0.7, color = "black"
+               ) +
     geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
-                   linetype = "dashed", color = "blue", size = 1) + 
+               linetype = "dashed", color = "blue", size = 1
+               ) + 
     geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
-                   linetype = "dashed", color = "blue", size = 1) + 
+               linetype = "dashed", color = "blue", size = 1
+               ) + 
     theme_minimal() + 
     labs(title = "Firm Strategy", 
-             x = "Asset Turnover", 
-             y = "Profit Margin") + 
+         x = "Asset Turnover", 
+         y = "Profit Margin"
+         ) + 
     guides(color = guide_legend(title = NULL), 
-           size = guide_legend(title = "Assets"))
+           size = guide_legend(title = "Assets")
+           )
 
 scatter_size
 ```
@@ -282,22 +306,26 @@ scatter_return <-
     ggplot() + 
     geom_point(aes(x = asset_turnover, y = profit_margin, 
                    fill = cut(roic, 
-                              breaks = 3, 
-                              labels = c("Low", "Medium", "High")
+                              breaks = 3, labels = c("Low", "Medium", "High")
                               )
                    ), 
-              alpha = 0.7, shape = 21, color = "black", size = 4) + 
+               alpha = 0.7, shape = 21, color = "black", size = 4
+               ) + 
     geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
-               linetype = "dashed", color = "blue", size = 1) + 
+               linetype = "dashed", color = "blue", size = 1
+               ) + 
     geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
-               linetype = "dashed", color = "blue", size = 1) + 
-    scale_fill_manual(values = c("Low" = "red", "Medium" = "orange", "High" = "green")) + 
+               linetype = "dashed", color = "blue", size = 1
+               ) + 
+    scale_fill_okabe_ito() +
     theme_minimal() + 
-    labs(title = "Firm Strategy", 
-             x = "Asset Turnover", 
-             y = "Profit Margin") + 
+    labs(title = "Firm Strategy: Large Australian Public Companies (2024)", 
+         x = "Asset Turnover", 
+         y = "Profit Margin"
+         ) + 
     guides(color = guide_legend(title = NULL), 
-           fill = guide_legend(title = "ROIC"))
+           fill = guide_legend(title = "ROIC")
+           )
 
 scatter_return
 ```

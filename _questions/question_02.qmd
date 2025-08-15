@@ -351,14 +351,17 @@ firm_strategy |>
                ) + 
     # Add a vertical line to show median value
     geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
-               linetype = "dashed", color = "blue", size = 1) + 
+               linetype = "dashed", color = "blue", size = 1
+               ) + 
     # Add a horizontal line to show median value
     geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
-               linetype = "dashed", color = "blue", size = 1) +  
+               linetype = "dashed", color = "blue", size = 1
+               ) +  
     theme_minimal() + 
     labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
          x = "Asset Turnover", 
-         y = "Profit Margin") + 
+         y = "Profit Margin"
+         ) + 
     guides(color = guide_legend(title = NULL))
 ```
 

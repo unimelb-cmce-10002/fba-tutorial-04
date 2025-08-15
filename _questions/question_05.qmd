@@ -16,17 +16,21 @@ firm_strategy |>
     filter(profit_margin > -2) |> 
     ggplot() + 
     geom_point(aes(y = profit_margin, x = asset_turnover), 
-                   alpha = 0.3) + 
+                   alpha = 0.3
+               ) + 
     # Add a vertical line to show median value
     geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
-               linetype = "dashed", color = "blue", size = 1) + 
+               linetype = "dashed", color = "blue", size = 1
+               ) + 
     # Add a horizontal line to show median value
     geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
-               linetype = "dashed", color = "blue", size = 1) +  
+               linetype = "dashed", color = "blue", size = 1
+               ) +  
     theme_minimal() + 
     labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
-         x = "Asset Turnover", 
-         y = "Profit Margin") + 
+             x = "Asset Turnover", 
+             y = "Profit Margin"
+         ) + 
     guides(color = guide_legend(title = NULL))
 ```
 
@@ -39,17 +43,22 @@ YOUR_DATAFRAME |>
     YOUR_FUNCTION_NAME(profit_margin > -2) |> 
     YOUR_FUNCTION_NAME() + 
     YOUR_FUNCTION_NAME(aes(x = YOUR_VARIABLE_NAME, y = YOUR_VARIABLE_NAME, 
-                           fill = YOUR_VARIABLE_NAME), 
-                   alpha = 0.7, shape = 21, size = 3, color = "black") + 
+                           fill = YOUR_VARIABLE_NAME
+                           ), 
+                       alpha = 0.7, shape = 21, size = 3, color = "black"
+                      ) + 
     geom_vline(xintercept = median(YOUR_DATAFRAME$YOUR_VARIABLE_NAME, na.rm = TRUE), 
-               linetype = "dashed", color = "blue", size = 1) + 
+               linetype = "dashed", color = "blue", size = 1
+               ) + 
     geom_hline(yintercept = median(YOUR_DATAFRAME$YOUR_VARIABLE_NAME, na.rm = TRUE), 
-               linetype = "dashed", color = "blue", size = 1) + 
+               linetype = "dashed", color = "blue", size = 1
+               ) + 
     scale_fill_okabe_ito() +
     theme_minimal() + 
     labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
              x = YOUR_LABEL, 
-             y = YOUR_LABEL) + 
+             y = YOUR_LABEL
+         ) + 
     guides(color = guide_legend(title = NULL), 
            fill = guide_legend(title = YOUR_LABEL))
 ```
@@ -110,7 +119,8 @@ YOUR_DATAFRAME |>
     # Rotate and align x-axis labels
     theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),  
           # Remove the legend title
-          legend.title = element_blank()) +
+          legend.title = element_blank()
+          ) +
     # Wrap x-axis labels at width 10 characters
     scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +  
     # Use color palette for filling
@@ -139,7 +149,8 @@ firm_strategy |>
     # Rotate and align x-axis labels
     theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),  
           # Remove the legend title
-          legend.title = element_blank()) +  
+          legend.title = element_blank()
+          ) +  
     # Wrap x-axis labels at width 10 characters
     scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +  
     scale_fill_okabe_ito() +
@@ -220,16 +231,20 @@ firm_strategy |>
   filter(profit_margin > -2) |> 
   ggplot() + 
     geom_point(aes(x = asset_turnover, y = profit_margin, fill = strategy_type), 
-                   alpha = 0.7, shape = 21, size = 3, color = "black") + # shape = 21 allows filling
+               alpha = 0.7, shape = 21, size = 3, color = "black"
+               ) + 
     geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
-                   linetype = "dashed", color = "blue", size = 1) + 
+                   linetype = "dashed", color = "blue", size = 1
+               ) + 
     geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
-                   linetype = "dashed", color = "blue", size = 1) + 
+                   linetype = "dashed", color = "blue", size = 1
+               ) + 
     scale_fill_okabe_ito() +
     theme_minimal() + 
     labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
          x = "Asset Turnover", 
-         y = "Profit Margin") + 
+         y = "Profit Margin"
+        ) + 
     guides(color = guide_legend(title = NULL), 
               fill = guide_legend(title = "Strategy Type"))
 ```
@@ -264,7 +279,7 @@ Here's the updated code:
 
 ```{r}
 firm_strategy |>
-    filter(profit_margin > -1) |>
+    filter(profit_margin > -2) |>
     group_by(strategy_type) |>
     summarize(obs = n())
 ```
@@ -308,22 +323,29 @@ Part of why Metals & Mining appears here could also be structural, not just stra
 Here's the updated code:
 
 ```{r}
-firm_strategy |> 
-  filter(profit_margin > -2) |> 
-  ggplot() + 
-    geom_point(aes(x = asset_turnover, y = profit_margin, fill = strategy_type), 
-                   alpha = 0.7, shape = 21, size = 3, color = "black") + # shape = 21 allows filling
-    geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
-                   linetype = "dashed", color = "blue", size = 1) + 
-    geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
-                   linetype = "dashed", color = "blue", size = 1) + 
+firm_strategy |>  
+    # Use %in% for filtering industries
+    filter(profit_margin > -2 & industry %in% big_industries) |> 
+    # Group by both industry and strategy_type
+    group_by(industry, strategy_type) |>  
+    # Count the number of occurrences for each strategy_type within each industry
+    summarize(count = n(), .groups = 'drop') |>  
+    # Map 'industry' to x-axis and 'strategy_type' to fill
+    ggplot(aes(x = industry, y = count, fill = strategy_type)) +  
+    geom_bar(stat = "identity") +  
+    theme_minimal() +  
+    # Rotate and align x-axis labels
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),  
+          # Remove the legend title
+          legend.title = element_blank()) +  
+    # Wrap x-axis labels at width 10 characters
+    scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +  
     scale_fill_okabe_ito() +
-    theme_minimal() + 
-    labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
-         x = "Asset Turnover", 
-         y = "Profit Margin") + 
-    guides(color = guide_legend(title = NULL), 
-              fill = guide_legend(title = "Strategy Type"))
+    labs(#No label for x-axis
+         x = NULL,
+         y = "No. of Firms",
+         title = "Strategy Type Across Large Australia Comapnies in 2024: The 'Big' Industries"
+         ) 
 ```
 
 Main insights:

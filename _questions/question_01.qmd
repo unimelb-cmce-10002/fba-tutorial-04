@@ -40,7 +40,8 @@ profit_margin_hist <-
                    ) +  
     labs(title = "Distribution of Profit Margin for Sample of Large ASX Companies in 2024", 
        x = "Profit Margin", 
-       y = "Frequency") + 
+       y = "Frequency"
+       ) + 
     theme_minimal() 
 
 asset_turnover_hist / profit_margin_hist
@@ -116,13 +117,13 @@ firm_strategy |>
 YOUR_DATAFRAME_NAME |>
     YOUR_FUNCTION_NAME(aes(x = YOUR_VARIABLE)) + 
     YOUR_FUNCTION_NAME(fill = "skyblue", color = "black", 
-                       alpha = 0.7, bins = 100) +
+                       alpha = 0.7, bins = 100
+                       ) +
     labs(title = "Distribution of Asset Turnover for Sample of Large ASX Companies in 2024", 
          x = YOUR_LABEL,  
          y = YOUR_LABEL
          ) +  
-    theme_minimal() 
-  
+    theme_minimal()
 ```
 
 Your plot should look like this:
@@ -240,11 +241,13 @@ Here's the updated code:
 firm_strategy |>
     ggplot(aes(x = profit_margin)) + 
     geom_histogram(fill = "darkorange", color = "black", 
-                   alpha = 0.7, bins = 100) +
+                   alpha = 0.7, bins = 100
+                   ) +
     labs(title = "Distribution of Profit Margin for Sample of Large ASX Companies in 2024",  
          x = "Profit Margin",  
-         y = "Frequency") +  
-    theme_minimal() 
+         y = "Frequency"
+         ) +  
+    theme_minimal()
 ```
 
 **(e).  Stretching outliers and squeezed histograms**
@@ -265,10 +268,12 @@ Here's the updated code:
 firm_strategy |> 
     ggplot(aes(x = asset_turnover)) + 
     geom_histogram(fill = "skyblue", color = "black", 
-                 alpha = 0.7, bins = 100) +
+                   alpha = 0.7, bins = 100
+                   ) +
     labs(title = "Distribution of Asset Turnover for Sample of Large ASX Companies in 2024", 
          x = "Asset Turnover", 
-         y = "Frequency") + 
+         y = "Frequency"
+         ) + 
     theme_minimal()
 ```
 
