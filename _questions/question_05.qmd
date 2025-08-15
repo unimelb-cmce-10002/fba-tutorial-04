@@ -10,16 +10,23 @@ In exercise 2, we created the following plot:
 #| echo: false
 #| warning: false
 
+# To improve our visualization, we need to focus on representative 
+# firms and drop outliers (see exercises 1 & 4 for more)
 firm_strategy |>
-  filter(profit_margin > -2) |> # To improve our visualization, we need to focus on representative firms and drop outliers (see exercises 1 & 4 for more)
-  ggplot() + 
-    geom_point(aes(y = profit_margin, x = asset_turnover), alpha = 0.3) + 
-    geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) + # Add a vertical line to show median value
-    geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) +  # Add a horizontal line to show median value
+    filter(profit_margin > -2) |> 
+    ggplot() + 
+    geom_point(aes(y = profit_margin, x = asset_turnover), 
+                   alpha = 0.3) + 
+    # Add a vertical line to show median value
+    geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
+               linetype = "dashed", color = "blue", size = 1) + 
+    # Add a horizontal line to show median value
+    geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
+               linetype = "dashed", color = "blue", size = 1) +  
     theme_minimal() + 
     labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
-       x = "Asset Turnover", 
-       y = "Profit Margin") + 
+         x = "Asset Turnover", 
+         y = "Profit Margin") + 
     guides(color = guide_legend(title = NULL))
 ```
 
@@ -29,30 +36,32 @@ firm_strategy |>
 
 ```{r, eval=FALSE}
 YOUR_DATAFRAME |> 
-  YOUR_FUNCTION_NAME(profit_margin > -2) |> 
-  YOUR_FUNCTION_NAME() + 
-  YOUR_FUNCTION_NAME(aes(x = YOUR_VARIABLE_NAME, y = YOUR_VARIABLE_NAME, fill = YOUR_VARIABLE_NAME), 
+    YOUR_FUNCTION_NAME(profit_margin > -2) |> 
+    YOUR_FUNCTION_NAME() + 
+    YOUR_FUNCTION_NAME(aes(x = YOUR_VARIABLE_NAME, y = YOUR_VARIABLE_NAME, 
+                           fill = YOUR_VARIABLE_NAME), 
                    alpha = 0.7, shape = 21, size = 3, color = "black") + 
-      geom_vline(xintercept = median(YOUR_DATAFRAME$YOUR_VARIABLE_NAME, na.rm = TRUE), 
-                   linetype = "dashed", color = "blue", size = 1) + 
-      geom_hline(yintercept = median(YOUR_DATAFRAME$YOUR_VARIABLE_NAME, na.rm = TRUE), 
-                   linetype = "dashed", color = "blue", size = 1) + 
-      theme_minimal() + 
-      labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
-           x = YOUR_LABEL, 
-           y = YOUR_LABEL) + 
-      guides(color = guide_legend(title = NULL), 
-               fill = guide_legend(title = YOUR_LABEL))
+    geom_vline(xintercept = median(YOUR_DATAFRAME$YOUR_VARIABLE_NAME, na.rm = TRUE), 
+               linetype = "dashed", color = "blue", size = 1) + 
+    geom_hline(yintercept = median(YOUR_DATAFRAME$YOUR_VARIABLE_NAME, na.rm = TRUE), 
+               linetype = "dashed", color = "blue", size = 1) + 
+    scale_fill_okabe_ito() +
+    theme_minimal() + 
+    labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
+             x = YOUR_LABEL, 
+             y = YOUR_LABEL) + 
+    guides(color = guide_legend(title = NULL), 
+           fill = guide_legend(title = YOUR_LABEL))
 ```
 
 **(c).** Run the first block of code provided below. Which firm from the plot above does this code identify? Run the second block of code provided below. And, which firm from the plot above does this code identify?
 
 ```{r, eval=FALSE}
 firm_strategy |> 
-      filter(strategy_type == 'High volume') |>
-      arrange(profit_margin) |>
-      select(conml, industry, ebit, at, sale, profit_margin, asset_turnover, roic) |>
-      head(1)
+    filter(strategy_type == 'High volume') |>
+    arrange(profit_margin) |>
+    select(conml, industry, ebit, at, sale, profit_margin, asset_turnover, roic) |>
+    head(1)
 ```
 
 ```{r, eval=FALSE}
@@ -67,9 +76,9 @@ firm_strategy |>
 
 ```{r, eval=FALSE}
 YOUR_DATAFRAME |>
-  YOUR_FUNCTION_NAME(profit_margin > -2) |>
-  group_by(YOUR_VARIABLE_NAME) |>
-  YOUR_FUNCTION_NAME(obs = n())
+    YOUR_FUNCTION_NAME(profit_margin > -2) |>
+    group_by(YOUR_VARIABLE_NAME) |>
+    YOUR_FUNCTION_NAME(obs = n())
 ```
 
 **(e).** Let’s dig down into one of these firm strategy types, High margin. Write and run a chunk of code that counts the number of firms from each industry that employ a high-margin strategy. Write your code such that it outputs a table that shows the five industries with the highest counts. Which industry accounts for the most high-margin firms in our sample?
@@ -88,38 +97,57 @@ WRITE YOUR ANSWER HERE
 
 ```{r, eval=FALSE}
 YOUR_DATAFRAME |>  
-  YOUR_FUNCTION(profit_margin > -2 & industry %in% big_industries) |>  # Use %in% for filtering industries
-  group_by(YOUR_VARIABLE_NAME, YOUR_VARIABLE_NAME) |>  # Group by both industry and strategy_type
-  YOUR_FUNCTION_NAME(count = n(), .groups = 'drop') |>  # Count the number of occurrences for each strategy_type within each industry
-  ggplot(aes(x = YOUR_VARIABLE_NAME, y = YOUR_VARIABLE_NAME, fill = YOUR_VARIABLE_NAME)) +  # Map 'industry' to x-axis and 'strategy_type' to fill
-  geom_bar(stat = "identity") +  
-  ylab("No. of Firms") +  # Y-axis label shows total count
-  theme_minimal() +  
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),  # Rotate and align x-axis labels
-        legend.title = element_blank()) +  # Remove the legend title
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +  # Wrap x-axis labels at width 10 characters
-  ggtitle("Strategy Type Across Large Australia Comapnies in 2024: The 'Big' Industries") +  
-  scale_fill_brewer(palette = "Set2") +  # Use color palette for filling
-  labs(x = NULL)  # No label for x-axis
+    # Use %in% for filtering industries
+    YOUR_FUNCTION(profit_margin > -2 & industry %in% big_industries) |>
+    # Group by both industry and strategy_type
+    group_by(YOUR_VARIABLE_NAME, YOUR_VARIABLE_NAME) |>  
+    # Count the number of occurrences for each strategy_type within each industry
+    YOUR_FUNCTION_NAME(count = n(), .groups = 'drop') |>  
+    # Map 'industry' to x-axis and 'strategy_type' to fill
+    ggplot(aes(x = YOUR_VARIABLE_NAME, y = YOUR_VARIABLE_NAME, fill = YOUR_VARIABLE_NAME)) +  
+    geom_bar(stat = "identity") +
+    theme_minimal() +  
+    # Rotate and align x-axis labels
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),  
+          # Remove the legend title
+          legend.title = element_blank()) +
+    # Wrap x-axis labels at width 10 characters
+    scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +  
+    # Use color palette for filling
+    scale_fill_okabe_ito() +  
+    labs(#No label for x-axis
+         x = NULL,
+         y = "No. of Firms",
+         title = "Strategy Type Across Large Australia Comapnies in 2024: The 'Big' Industries"
+         )  
 ```
 
 Your plot should look like this:
 
 ```{r, echo=FALSE, warning=FALSE}
 firm_strategy |>  
-  filter(profit_margin > -2 & industry %in% big_industries) |>  # Use %in% for filtering industries
-  group_by(industry, strategy_type) |>  # Group by both industry and strategy_type
-  summarize(count = n(), .groups = 'drop') |>  # Count the number of occurrences for each strategy_type within each industry
-  ggplot(aes(x = industry, y = count, fill = strategy_type)) +  # Map 'industry' to x-axis and 'strategy_type' to fill
-  geom_bar(stat = "identity") +  
-  ylab("No. of Firms") +  # Y-axis label shows total count
-  theme_minimal() +  
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),  # Rotate and align x-axis labels
-        legend.title = element_blank()) +  # Remove the legend title
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +  # Wrap x-axis labels at width 10 characters
-  ggtitle("Strategy Type Across Large Australia Comapnies in 2024: The 'Big' Industries") +  
-  scale_fill_brewer(palette = "Set2") +  # Use color palette for filling
-  labs(x = NULL)  # No label for x-axis
+    # Use %in% for filtering industries
+    filter(profit_margin > -2 & industry %in% big_industries) |> 
+    # Group by both industry and strategy_type
+    group_by(industry, strategy_type) |>  
+    # Count the number of occurrences for each strategy_type within each industry
+    summarize(count = n(), .groups = 'drop') |>  
+    # Map 'industry' to x-axis and 'strategy_type' to fill
+    ggplot(aes(x = industry, y = count, fill = strategy_type)) +  
+    geom_bar(stat = "identity") +  
+    theme_minimal() +  
+    # Rotate and align x-axis labels
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),  
+          # Remove the legend title
+          legend.title = element_blank()) +  
+    # Wrap x-axis labels at width 10 characters
+    scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +  
+    scale_fill_okabe_ito() +
+    labs(#No label for x-axis
+         x = NULL,
+         y = "No. of Firms",
+         title = "Strategy Type Across Large Australia Comapnies in 2024: The 'Big' Industries"
+         ) 
 ```
 
 <!-- BEGIN PROFILE:r-teaching-guide -->
@@ -197,6 +225,7 @@ firm_strategy |>
                    linetype = "dashed", color = "blue", size = 1) + 
     geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
                    linetype = "dashed", color = "blue", size = 1) + 
+    scale_fill_okabe_ito() +
     theme_minimal() + 
     labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
          x = "Asset Turnover", 
@@ -213,20 +242,20 @@ The high-volume strategy firm (Star Entertainment) that has the lowest profit ma
 
 ```{r}
 firm_strategy |> 
-      filter(strategy_type == 'High volume') |>
-      arrange(profit_margin) |>
-      select(conml, industry, ebit, at, sale, profit_margin, asset_turnover, roic) |>
-      head(1)
+    filter(strategy_type == 'High volume') |>
+    arrange(profit_margin) |>
+    select(conml, industry, ebit, at, sale, profit_margin, asset_turnover, roic) |>
+    head(1)
 ```
 
 The high-margin firm (Jupiter Mines) that has the lowest volume:
 
 ```{r}
 firm_strategy |> 
-      filter(strategy_type == 'High margin') |>
-      arrange(asset_turnover) |>
-      select(conml, industry, ebit, at, sale, profit_margin, asset_turnover, roic) |>
-      head(1)
+    filter(strategy_type == 'High margin') |>
+    arrange(asset_turnover) |>
+    select(conml, industry, ebit, at, sale, profit_margin, asset_turnover, roic) |>
+    head(1)
 ```
 
 **(d). Strategy types that are most common and least common in our sample** 
@@ -235,9 +264,9 @@ Here's the updated code:
 
 ```{r}
 firm_strategy |>
-  filter(profit_margin > -1) |>
-  group_by(strategy_type) |>
-  summarize(obs = n())
+    filter(profit_margin > -1) |>
+    group_by(strategy_type) |>
+    summarize(obs = n())
 ```
 
 The most common strategy type in our (trimmed) sample is 'High volume', with 60 firms. The least common type is 'Sinking ship', with 31 firms. Poor-performing firms—especially those in the Sinking ship quadrant—are the most likely to face financial distress or exit the market. This fits with the economic logic we discussed: persistent low margins and asset turnover erode returns and make it hard to compete. Over time, these firms either adapt their strategy (shift quadrants) or disappear from the data set.
@@ -248,11 +277,11 @@ Here's the updated code:
 
 ```{r}
 firm_strategy |>
-  filter(profit_margin > -2 & strategy_type == 'High margin') |>
-  group_by(industry) |>
-  summarize(obs = n()) |>
-  arrange(desc(obs)) |>
-  head(5)
+    filter(profit_margin > -2 & strategy_type == 'High margin') |>
+    group_by(industry) |>
+    summarize(obs = n()) |>
+    arrange(desc(obs)) |>
+    head(5)
 ```
 
 In our trimmed sample, of firms that employ a high-margin strategy, Mining & Metals industry accounts for the largest share. This is consistent with our earlier observations in Exercise 3 (a).
@@ -263,11 +292,11 @@ Here's the updated code:
 
 ```{r}
 firm_strategy |>
-  filter(profit_margin > -2 & strategy_type == 'High volume') |>
-  group_by(industry) |>
-  summarize(obs = n()) |>
-  arrange(desc(obs)) |>
-  head(5)
+    filter(profit_margin > -2 & strategy_type == 'High volume') |>
+    group_by(industry) |>
+    summarize(obs = n()) |>
+    arrange(desc(obs)) |>
+    head(5)
 ```
 
 In our trimmed sample, of firms that employ a high-volume strategy, Construction & Engineering, Mining & Metals, and Special Retail industries account for the largest share. These industries likely operate under conditions where competitive pressures and customer expectations keep margins tight. Profitability depends on selling large quantities, spreading fixed costs over high output, and leveraging economies of scale in production, procurement, or distribution. 
@@ -279,20 +308,22 @@ Part of why Metals & Mining appears here could also be structural, not just stra
 Here's the updated code:
 
 ```{r}
-firm_strategy |>  
-  filter(profit_margin > -2 & industry %in% big_industries) |>  # Use %in% for filtering industries
-  group_by(industry, strategy_type) |>  # Group by both industry and strategy_type
-  summarize(count = n(), .groups = 'drop') |>  # Count the number of occurrences for each strategy_type within each industry
-  ggplot(aes(x = industry, y = count, fill = strategy_type)) +  # Map 'industry' to x-axis and 'strategy_type' to fill
-  geom_bar(stat = "identity") +  
-  ylab("No. of Firms") +  # Y-axis label shows total count
-  theme_minimal() +  
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),  # Rotate and align x-axis labels
-        legend.title = element_blank()) +  # Remove the legend title
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +  # Wrap x-axis labels at width 10 characters
-  ggtitle("Strategy Type Across Large Australia Comapnies in 2024: The 'Big' Industries") +  
-  scale_fill_brewer(palette = "Set2") +  # Use color palette for filling
-  labs(x = NULL)  # No label for x-axis
+firm_strategy |> 
+  filter(profit_margin > -2) |> 
+  ggplot() + 
+    geom_point(aes(x = asset_turnover, y = profit_margin, fill = strategy_type), 
+                   alpha = 0.7, shape = 21, size = 3, color = "black") + # shape = 21 allows filling
+    geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
+                   linetype = "dashed", color = "blue", size = 1) + 
+    geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
+                   linetype = "dashed", color = "blue", size = 1) + 
+    scale_fill_okabe_ito() +
+    theme_minimal() + 
+    labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
+         x = "Asset Turnover", 
+         y = "Profit Margin") + 
+    guides(color = guide_legend(title = NULL), 
+              fill = guide_legend(title = "Strategy Type"))
 ```
 
 Main insights:
