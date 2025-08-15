@@ -1,12 +1,152 @@
 <!-- question-type: prepare -->
-### Exercise 2: Title
+### Exercise 2: Firm Strategy and The Profit Margin - Asset Turnover Relationship
 
-This is the text for the question, with its accompanying code 
+Our objective is to create the following plot:
 
-```{r}
-# Example code for the question
-1 + 1
+```{r, echo = FALSE, warning=FALSE}
+firm_strategy |>
+  filter(profit_margin > -2) |> # To improve our visualization, we need to focus on representative firms and drop outliers (see exercises 1 & 4 for more)
+  ggplot() + 
+    geom_point(aes(y = profit_margin, x = asset_turnover), alpha = 0.3) + 
+    geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) + # Add a vertical line to show median value
+    geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) +  # Add a horizontal line to show median value
+    theme_minimal() + 
+    labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
+       x = "Asset Turnover", 
+       y = "Profit Margin") + 
+    guides(color = guide_legend(title = NULL))
 ```
+
+**(a).** In exercise 1, you used histograms to show the distributions of `profit_margin` and `asset_turnover`. Use the starter code below to identify the five firms in the right tail of each of these distributions-i.e., those firms that have the highest profit margins, and those firms that have the highest asset turnover.
+
+To help, we have included the table that your code should output for `profit_margin`:
+
+```{r, echo=FALSE}
+firm_strategy |>
+  slice_max(profit_margin, n = 5) |>
+  select(conml, industry, ebit, at, sale, profit_margin, asset_turnover, roic)
+```
+
+```{r, eval=FALSE}
+firm_strategy |> # Replicate the profit margin table
+  slice_max(YOUR_VARIABLE_NAME, n = 5) |> # slice_max is a concise alternative to using arrange() then head()
+  select(YOUR_VARIABLE_NAME, ..., YOUR_VARIABLE_NAME)
+```
+
+```{r, eval=FALSE}
+firm_strategy |> # Produce the equivalent table for asset turnover
+  slice_max(YOUR_VARIABLE_NAME, n = 5) |> # slice_max is a concise alternative to using arrange() then head()
+  select(YOUR_VARIABLE_NAME, ..., YOUR_VARIABLE_NAME)
+```
+
+**(b).**  Do we observe differences in industries or firm size across these tables? Are the same or different firms present across these tables? How do profit margin and asset turnover appear to be related and what does this reveal about firm strategy?
+
+
+**(c).** Next, we want to create a new variable that classifies each firm in our sample as one of the following strategy types:
+
+- IF above median profit margin AND below median asset turnover THEN, strategy type = 'High margin'
+- IF below median profit margin AND above median asset turnover THEN, strategy type = 'High volume' 
+
+Some firms may fail to meet the conditions for either of these categories. Classify these firms as follows:
+
+- IF below median profit margin AND below median asset turnover THEN, strategy type =  'Sinking ship'
+- IF above median profit margin AND above median asset turnover THEN, strategy type =  'Superstar'
+
+Use the starter code below to create the variable `strategy_type` and so classify each firm's strategy type. Replace `YOUR_DATAFRAME`, `YOUR_FUNCTION_NAME` and `YOUR_VARIABLE_NAME` as appropriate.
+
+```{r eval=FALSE}
+YOUR_DATAFRAME <- YOUR_DATAFRAME |>
+  YOUR_FUNCTION_NAME(
+    strategy_type = NA_character_,  # Initialize the column as NA first (we need to create an 'empty' column that we can then populate)
+    strategy_type = ifelse(
+      profit_margin >= median(profit_margin, na.rm = TRUE) & 
+      asset_turnover < median(asset_turnover, na.rm = TRUE), 
+      'High margin', strategy_type),
+    YOUR_VARIABLE_NAME = ifelse(
+      YOUR_VARIABLE_NAME < median(YOUR_VARIABLE_NAME, na.rm = TRUE) & 
+      YOUR_VARIABLE_NAME >= median(YOUR_VARIABLE_NAME, na.rm = TRUE), 
+      'YOUR_STRATEGY_TYPE', strategy_type),
+    YOUR_VARIABLE_NAME = ifelse(
+      YOUR_VARIABLE_NAME < median(YOUR_VARIABLE_NAME, na.rm = TRUE) & 
+      YOUR_VARIABLE_NAME < median(YOUR_VARIABLE_NAME, na.rm = TRUE), 
+      'YOUR_STRATEGY_TYPE', strategy_type),
+    YOUR_VARIABLE_NAME = ifelse(
+      YOUR_VARIABLE_NAME >= median(YOUR_VARIABLE_NAME, na.rm = TRUE) & 
+      YOUR_VARIABLE_NAME >= median(YOUR_VARIABLE_NAME, na.rm = TRUE), 
+      'YOUR_STRATEGY_TYPE', strategy_type)
+  )
+```
+
+```{r echo=FALSE}
+firm_strategy <- firm_strategy |>
+  mutate(
+    strategy_type = NA_character_,  # Initialize the 'firm' column as NA first (we need to create an 'empty' column that we can then populate)
+    strategy_type = ifelse(
+      profit_margin >= median(profit_margin, na.rm = TRUE) & 
+      asset_turnover < median(asset_turnover, na.rm = TRUE), 
+      'High margin', strategy_type),
+    strategy_type = ifelse(
+      profit_margin < median(profit_margin, na.rm = TRUE) & 
+      asset_turnover >= median(asset_turnover, na.rm = TRUE), 
+      'High volume', strategy_type),
+    strategy_type = ifelse(
+      profit_margin < median(profit_margin, na.rm = TRUE) & 
+      asset_turnover < median(asset_turnover, na.rm = TRUE), 
+      'Sinking ship', strategy_type),
+    strategy_type = ifelse(
+      profit_margin >= median(profit_margin, na.rm = TRUE) & 
+      asset_turnover >= median(asset_turnover, na.rm = TRUE), 
+      'Superstar', strategy_type)
+  )
+```
+
+**(d).** To shed light on how the above 'works', run the code below and explain what each part of the code 'does' to the output. What must be the case for a firm's strategy type to be classified as 'High margin'? How is a firm's strategy type classified if this is not the case? What value does strategy type take if only one of these conditions holds?
+
+```{r, eval=FALSE}
+firm_strategy |>
+  mutate(
+    strategy_type = NA_character_,  
+    strategy_type = ifelse(
+        profit_margin >= median(profit_margin, na.rm = TRUE) & 
+        asset_turnover < median(asset_turnover, na.rm = TRUE), 
+        'High margin', 'Other')) |>
+  select(conml, profit_margin, asset_turnover, strategy_type) |>
+  head(10)
+```
+
+**(e).** Now, we can examine the relationship between profit margin, asset turnover, and firm strategy. Use the starter code below to create a basic scatterplot of profit margin vs asset turnover. Replace the placeholder code (e.g., `YOUR_DATAFRAME`) as appropriate.
+
+```{r, eval=FALSE}
+YOUR_DATAFRAME |>
+      filter(profit_margin > -2) |> # To improve our visualization, we need to focus on representative firms and drop outliers (see exercises 1 & 4 for more)
+      YOUR_FUNCTION_NAME() + 
+        YOUR_FUNCTION_NAME(aes(y = YOUR_VARIABLE_NAME, x = YOUR_VARIABLE_NAME), alpha = 0.3) +
+        geom_vline(xintercept = median(YOUR_DATAFRAME$YOUR_VARIABLE_NAME, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) + # Add a vertical line to show median value
+        geom_hline(yintercept = median(YOUR_DATAFRAME$YOUR_VARIABLE_NAME, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) +  # Add a horizontal line to show median value
+        theme_minimal() + 
+        labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
+           x = YOUR_LABEL, 
+           y = YOUR_LABEL) + 
+        guides(color = guide_legend(title = NULL))
+```
+
+You plot should look like this:
+
+```{r, echo=FALSE}
+firm_strategy |>
+      filter(profit_margin > -2) |> # To improve our visualization, we need to focus on representative firms and drop outliers (see exercises 1 & 4 for more)
+      ggplot() + 
+        geom_point(aes(y = profit_margin, x = asset_turnover), alpha = 0.3) + 
+        geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) + # Add a vertical line to show median value
+        geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) +  # Add a horizontal line to show median value
+        theme_minimal() + 
+        labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
+           x = "Asset Turnover", 
+           y = "Profit Margin") + 
+        guides(color = guide_legend(title = NULL))
+```
+
+**(f).** Nice! We can learn a lot from this plot, but to start let's return to an earlier question we considered: How do profit margin and asset turnover appear to be related and what does this reveal about firm strategy? Explain why we have few firms in the top right? And why we have few firms in the bottom left?
 
 <!-- BEGIN PROFILE:r-teaching-guide -->
 ::: {.content-visible when-profile="r-teaching-guide"}
@@ -20,22 +160,31 @@ Teaching Note
 ::: {.teaching-block-body}
 
 🎯 **Learning Objective** 
+
 Students should:
 
-- XXXXX
+- Use `slice_max()` with `select()` to identify top firms based on a given metric (e.g., highest profit margin or asset turnover).
+- Apply `mutate()` and multiple `ifelse()` statements to create a categorical variable (e.g., firm strategy type) based on multiple numeric thresholds.
+- Interpret the relationship between profit margin and asset turnover and connect results to strategic frameworks.
+- Use `ggplot2` to create scatterplots with median reference lines and explain quadrant patterns in business terms.
 
 ✅   **Core Concepts to Highlight**
 
-List them here
-
+- Different performance metrics identify different firms – high-margin firms and high-turnover firms rarely overlap because they reflect distinct strategies.
+- Industry patterns – high-margin leaders often in capital-intensive sectors; high-turnover leaders often in retail or service sectors.
+- Categorical classification logic – understanding how multiple `ifelse()` statements are evaluated and how order matters in assigning categories.
+- Quadrant analysis – using medians as cutoffs to classify firms and interpret strategic positioning.
 
 💬 **Suggested In-Class Prompts** (if needed)
 
-List as needed
+NA
 
 📌 **Common Misunderstandings**
 
-List as needed
+- Thinking `slice_max()` changes the original data frame – it just returns the requested rows for that pipeline.
+- Assuming high ROIC always requires both high margin and high turnover – either one can drive high returns if the other is reasonable.
+- Believing the `ifelse()` classification assigns multiple labels – in reality, each row gets the first matching category based on order.
+- Confusing medians with means when setting classification cutoffs – medians are less sensitive to outliers.
 
 :::
 
@@ -55,11 +204,123 @@ Solution
 
 ::: {.solution-block-body}
 
-Here’s the explanation and code:
+**(a). Filtering and selecting to identify high-performing firms**
+
+Here's the updated code:
 
 ```{r}
-print("Hello, world!")
+firm_strategy |>
+  slice_max(profit_margin, n = 5) |> 
+  select(conml, industry, ebit, at, sale, profit_margin, asset_turnover, roic)
 ```
+
+```{r}
+
+firm_strategy |>
+  slice_max(asset_turnover, n = 5) |> 
+  select(conml, industry, ebit, at, sale, profit_margin, asset_turnover, roic)
+
+```
+
+**(b). Firm strategy, industry, and size**  
+
+The firms with the highest profit margins are concentrated in capital-intensive industries such as metals & mining, utilities, and building products. These companies tend to be larger in scale, with substantial asset bases, and focus on earning high mark-ups per unit sold, even if sales volumes relative to assets are modest.
+
+By contrast, the firms with the highest asset turnover operate in industries like retail, professional services, and construction services. They are often smaller in absolute size but excel at generating very high sales relative to the assets they employ. Margins are typically lower, but rapid sales cycles and intensive asset use drive strong turnover.
+
+No firms appear in both lists, highlighting that profit margin and asset turnover often trade off. High-margin firms accept lower turnover, while high-turnover firms operate on thinner margins. These patterns reflect distinct strategies for achieving profitability — one driven by margins, the other by turnover.
+
+**(c).   Classifying firms by strategy type**
+
+Here's the updated code:
+
+```{r}
+firm_strategy <- firm_strategy |>
+  mutate(
+    strategy_type = NA_character_,  # Initialize the 'firm' column as NA first (we need to create an 'empty' column that we can then populate)
+    strategy_type = ifelse(
+      profit_margin >= median(profit_margin, na.rm = TRUE) & 
+      asset_turnover < median(asset_turnover, na.rm = TRUE), 
+      'High margin', strategy_type),
+    strategy_type = ifelse(
+      profit_margin < median(profit_margin, na.rm = TRUE) & 
+      asset_turnover >= median(asset_turnover, na.rm = TRUE), 
+      'High volume', strategy_type),
+    strategy_type = ifelse(
+      profit_margin < median(profit_margin, na.rm = TRUE) & 
+      asset_turnover < median(asset_turnover, na.rm = TRUE), 
+      'Sinking ship', strategy_type),
+    strategy_type = ifelse(
+      profit_margin >= median(profit_margin, na.rm = TRUE) & 
+      asset_turnover >= median(asset_turnover, na.rm = TRUE), 
+      'Superstar', strategy_type)
+)
+```
+
+**(d). Using `ifelse` statements to create categorical variables**
+
+```{r, eval=FALSE}
+firm_strategy |>
+  mutate(
+    strategy_type = NA_character_,  
+    strategy_type = ifelse(
+        profit_margin >= median(profit_margin, na.rm = TRUE) & 
+        asset_turnover < median(asset_turnover, na.rm = TRUE), 
+        'High margin', 'Other')) |>
+  select(conml, profit_margin, asset_turnover, strategy_type) |>
+  head(10)
+```
+
+This code starts with the `firm_strategy` data frame and transforms it step-by-step.  
+
+1. `mutate(strategy_type = NA_character_)`  
+   Adds a new column, `strategy_type`, initially filled with `NA` (missing) values of type character.  
+
+2. The next `mutate` line uses `ifelse()` to assign `"High margin"` if two conditions are both true:  
+   * The firm's `profit_margin` is at least the median profit margin (ignoring missing values), and  
+   * The firm's `asset_turnover` is less than the median asset turnover (ignoring missing values).  
+
+   If either of these conditions is false, `"Other"` is assigned instead.  
+
+3. `select(conml, profit_margin, asset_turnover, strategy_type)`  
+   Keeps only the relevant columns in the output.  
+
+4. `head(10)`  
+   Shows just the first 10 rows of the resulting table.  
+
+A firm’s strategy type is `"High margin"` only if it has an above-median profit margin and a below-median asset turnover.  
+If this is not the case (meaning at least one condition fails), it is classified as `"Other"`.  
+This means that if only one condition holds — for example, a firm has a high profit margin but also high turnover, or low margin but low turnover — the strategy type will still be `"Other"`.
+
+**(e). Profit margin vs asset turnover scatterplot **
+
+Here's the updated code:
+
+```{r}
+firm_strategy |>
+      filter(profit_margin > -2) |> # To improve our visualization, we need to focus on representative firms and drop outliers (see exercises 1 & 4 for more)
+      ggplot() + 
+        geom_point(aes(y = profit_margin, x = asset_turnover), alpha = 0.3) + 
+        geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) + # Add a vertical line to show median value
+        geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) +  # Add a horizontal line to show median value
+        theme_minimal() + 
+        labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
+           x = "Asset Turnover", 
+           y = "Profit Margin") + 
+        guides(color = guide_legend(title = NULL))
+```
+
+**(f). Firm strategy, trade-offs, and specialization**
+
+Looking at your scatterplot of profit margin versus asset turnover, we can make a few observations about the relationship and what it implies for firm strategy:
+
+1. Inverse relationship between margin and turnover - Most firms cluster at the intersection of the median lines, with higher profit margins generally associated with lower asset turnover, and vice versa. This aligns with the classic high-volume vs. high-margin strategic framework.
+
+2. Few firms in the top right - The top right quadrant (high margin, high turnover) is nearly empty. This suggests that it is rare for firms to excel at both strategies simultaneously. High margins often require specialized products or services, while high turnover typically involves commoditized offerings with lower margins.
+
+3. Few firms in the bottom left - The bottom left quadrant (low margin, low turnover) is also sparse. Low profitability and inefficient use of assets usually result in competitive exit or restructuring.
+
+Overall, the scatterplot visually confirms the trade-off between profit margin and asset turnover, illustrating how firms generally adopt a clear strategic orientation — either high-margin or high-volume — rather than trying to excel at both simultaneously.
 :::
 
 :::
