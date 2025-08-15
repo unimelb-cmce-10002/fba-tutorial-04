@@ -13,7 +13,15 @@ engine: knitr
 <!-- BEGIN INSERT:prepare-header -->
 ## Prepare these Exercises before Class 
 
-Prepare these exercises before coming to class. Plan to spend 30 minutes on these exercises.
+Prepare these exercises before coming to class. Plan to spend 60 minutes on these exercises.
+
+::: {.callout-important title = "Switch on the `eval` flag when you want to evaluate code!"}
+In the R code chunks below we have provided starter code for you to work from.
+We have set the key `eval` to the value `false` so that they are not run because they have syntax such as `YOUR_VALUE_HERE` which would generate errors.
+
+Switch the `eval` value to `true` when you want the R code within a chunk to be run when you compile your document.
+:::
+
 <!-- END INSERT:prepare-header -->
 
 {{< include _questions/question_01.qmd >}}
@@ -22,9 +30,6 @@ Prepare these exercises before coming to class. Plan to spend 30 minutes on thes
 
 {{< include _questions/question_03.qmd >}}
 
-{{< include _questions/question_04.qmd >}}
-
-{{< include _questions/question_05.qmd >}}
 
 <!-- BEGIN INSERT:inclass-header -->
 ## In-Class Exercises
@@ -32,12 +37,6 @@ Prepare these exercises before coming to class. Plan to spend 30 minutes on thes
 You will discuss these exercises in class with your peers in small groups and with your tutor. These exercises build from the exercises you have prepared above, you will get the most value from the class if you have completed those above before coming to class.
 <!-- END INSERT:inclass-header -->
 
-{{< include _questions/question_06.qmd >}}
+{{< include _questions/question_04.qmd >}}
 
-{{< include _questions/question_07.qmd >}}
-
-{{< include _questions/question_08.qmd >}}
-
-{{< include _questions/question_09.qmd >}}
-
-{{< include _questions/question_10.qmd >}}
+{{< include _questions/question_05.qmd >}} 
