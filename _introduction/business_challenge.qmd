@@ -34,7 +34,7 @@ if (!file.exists(destfile)) {
 asx_200_2024 <- read_csv(destfile)
 ```
 
-### The Topic: Understanding firm strategy in the Australian economy{.unnumbered}
+### The Topic: Understanding firm strategy in the Australian economy {.unnumbered}
 
 In the lecture, we examined the level of firms’ profits and the efficiency with which firms use investors’ capital to produce these profits (i.e., returns as a measure of profitability). However, we have yet to examine variation in 'how' firms produce profits. Broadly speaking, firms can pursue one of two strategies. Firms can employ a high-margin, low-volume strategy, or a low-margin, high-volume strategy. The former rely on pricing power or operational efficiencies that drive down costs in order to produce more profit per unit of good or services sold. The latter rely on scaling up operations and distribution in order to sell at very high volumes goods or services that provide much less profit per unit.
 
@@ -96,23 +96,36 @@ asx_200_2024 %>%
 #| echo: false
 #| warning: false
 
-firm_strategy <- asx_200_2024 %>%
-  filter(invested_capital > 0 & at > 0 & sale > 0) %>% # Drop observations where we would have to divide by zero when calculating our new variables
-  mutate(roic = ebit/invested_capital,
-         profit_margin = ebit/sale,
-         asset_turnover = sale/at)
+firm_strategy <- 
+    asx_200_2024 %>%
+    # Drop observations where we would have to divide by zero when calculating our new variables
+    filter(invested_capital > 0 & at > 0 & sale > 0) %>% 
+    mutate(
+        roic = ebit/invested_capital,
+        profit_margin = ebit/sale,
+        asset_turnover = sale/at
+        )
 
 firm_strategy %>% 
-      filter(profit_margin > -2) %>% 
-      ggplot() + 
-        geom_point(aes(x = asset_turnover, y = profit_margin, fill = cut(roic, 
-                   breaks = 3, labels = c("Low", "Medium", "High"))), 
+    filter(profit_margin > -2) %>% 
+    ggplot() + 
+    geom_point(aes(x = asset_turnover, y = profit_margin, 
+                   fill = cut(roic, 
+                   breaks = 3, labels = c("Low", "Medium", "High")
+                        )
+                   ), 
                    alpha = 0.7, shape = 21, color = "black", size = 4) + 
         geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
-                   linetype = "dashed", color = "blue", size = 1) + 
+                   linetype = "dashed", 
+                   color = "blue", 
+                   size = 1
+                   ) + 
         geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
-                   linetype = "dashed", color = "blue", size = 1) + 
-        scale_fill_manual(values = c("Low" = "red", "Medium" = "orange", "High" = "green")) + 
+                   linetype = "dashed", 
+                   color = "blue", 
+                   size = 1
+                   ) + 
+        scale_fill_okabe_ito() +
         theme_minimal() + 
         labs(title = "Firm Strategy: Large Australian Public Companies (2024)", 
              x = "Asset Turnover", 

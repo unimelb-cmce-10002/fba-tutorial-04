@@ -11,34 +11,36 @@ In exercise 1, we created the following plot:
 #| warning: false
 
 firm_strategy |>
-  ggplot(aes(x = profit_margin)) + 
-  geom_histogram(fill = "darkorange", color = "black", alpha = 0.7, bins = 100) +
-  labs(title = "Distribution of Profit Margin for Sample of Large ASX Companies in 2024",  
-       x = "Profit Margin",  
-       y = "Frequency") +  
-  theme_minimal() 
+    ggplot(aes(x = profit_margin)) + 
+    geom_histogram(fill = "darkorange", color = "black", 
+                 alpha = 0.7, bins = 100) +
+    labs(title = "Distribution of Profit Margin for Sample of Large ASX Companies in 2024",  
+             x = "Profit Margin",  
+             y = "Frequency") +  
+    theme_minimal() 
 ```
 
 **(a).** We have two extreme observations in the left tail of our distribution. Create a short, narrow table that isolates these observations and shows only the sub-set of variables that relate to profit margin and asset turnover. Using this table, explains why these firms have such extreme (negative) profit margins. Use the starter code below to create and display such a table.
 
 ```{r, eval=FALSE}
 YOUR_DATAFRAME |>
-  YOUR_FUNCTION_NAME(YOUR_VARIABLE_NAME) |>
-  YOUR_FUNCTION_NAME(2) |>
-  YOUR_FUNCTION_NAME(conml, industry, ebit, at, sale, profit_margin, asset_turnover)
+    YOUR_FUNCTION_NAME(YOUR_VARIABLE_NAME) |>
+    YOUR_FUNCTION_NAME(2) |>
+    YOUR_FUNCTION_NAME(conml, industry, ebit, at, sale, profit_margin, asset_turnover)
 ```
 
 **(b).** These extreme observations badly drag out our distribution’s left tail, and so compress our visualization of the rest of the distribution (i.e., the vast majority of firms in our sample are pushed into a single column even though there is much variation in these firms' profit margins). Use the starter code below to remove these outliers from our sample and then create a basic histogram that visualizes the distribution of profit for our ‘pruned’ sample.
 
 ```{r, eval=FALSE}
 YOUR_DATAFRAME |>
-  YOUR_FUNCTION_NAME(YOUR_VARIABLE_NAME > YOUR_LOWER_BOUND_VALUE) |>
-  YOUR_FUNCTION_NAME(aes(x = YOUR_VARIABLE_NAME)) + 
-  YOUR_FUNCTION_NAME(fill = "darkorange", color = "black", alpha = 0.7, bins = 100) +  
-  labs(title = "Distribution of Profit Margin for Sample of Large ASX Companies in 2024", 
-       x = YOUR_LABEL, 
-       y = YOUR_LABEL) + 
-  theme_minimal() 
+    YOUR_FUNCTION_NAME(YOUR_VARIABLE_NAME > YOUR_LOWER_BOUND_VALUE) |>
+    YOUR_FUNCTION_NAME(aes(x = YOUR_VARIABLE_NAME)) + 
+    YOUR_FUNCTION_NAME(fill = "darkorange", color = "black", 
+                       alpha = 0.7, bins = 100) +  
+    labs(title = "Distribution of Profit Margin for Sample of Large ASX Companies in 2024", 
+             x = YOUR_LABEL, 
+            y = YOUR_LABEL) + 
+    theme_minimal() 
 ```
 
 **(c).** Hmm! Explain whether you think the plot above effectively visualizes the distribution of profit margin for large Australian public companies. Do we still have extreme observations in our left tail? How do these affect what we can learn about the majority of firms, which exhibit profit margins >= 0?
@@ -47,13 +49,14 @@ YOUR_DATAFRAME |>
 
 ```{r, eval=FALSE}
 YOUR_DATAFRAME |>
-  YOUR_FUNCTION_NAME(YOUR_VARIABLE_NAME > YOUR_HIGHER_LOWER_BOUND_VALUE) |>
-  YOUR_FUNCTION_NAME(aes(x = YOUR_VARIABLE_NAME)) + 
-  YOUR_FUNCTION_NAME(fill = "darkorange", color = "black", alpha = 0.7, bins = 100) +  
-  labs(title = "Distribution of Profit Margin for Sample of Large ASX Companies in 2024", 
-       x = YOUR_LABEL, 
-       y = YOUR_LABEL) + 
-  theme_minimal() 
+    YOUR_FUNCTION_NAME(YOUR_VARIABLE_NAME > YOUR_HIGHER_LOWER_BOUND_VALUE) |>
+    YOUR_FUNCTION_NAME(aes(x = YOUR_VARIABLE_NAME)) + 
+    YOUR_FUNCTION_NAME(fill = "darkorange", color = "black", 
+                       alpha = 0.7, bins = 100) +  
+    labs(title = "Distribution of Profit Margin for Sample of Large ASX Companies in 2024", 
+             x = YOUR_LABEL, 
+             y = YOUR_LABEL) + 
+    theme_minimal() 
 ```
 
 **(e).** Using the above plot, what would you consider to be the typical large Australian company’s profit margin? What would you consider a high-margin firm to be? Explain why it is not possible for the distribution of profit margin to have a very long right tail (i.e., firms that enjoy extremely large profit margins)?

@@ -10,82 +10,101 @@ Our objective is to create the following plots:
 #| echo: false
 #| warning: false
 
-firm_strategy <- asx_200_2024 |>
-  filter(invested_capital > 0 & at > 0 & sale > 0) |> 
-  mutate(roic = ebit/invested_capital,
-         profit_margin = ebit/sale,
-         asset_turnover = sale/at)
+firm_strategy <- 
+    asx_200_2024 |>
+    filter(invested_capital > 0 & at > 0 & sale > 0) |> 
+    mutate(
+        roic = ebit / invested_capital,
+        profit_margin = ebit / sale,
+        asset_turnover = sale / at
+        )
 
-asset_turnover_hist <- firm_strategy |> 
-  ggplot(aes(x = asset_turnover)) + 
-  geom_histogram(fill = "skyblue", color = "black", alpha = 0.7, bins = 100) +
-  labs(title = "Distribution of Asset Turnover for Sample of Large ASX Companies in 2024", 
-       x = "Asset Turnover", 
-       y = "Frequency") + 
-  theme_minimal()
+asset_turnover_hist <- 
+    firm_strategy |> 
+    ggplot(aes(x = asset_turnover)) + 
+    geom_histogram(fill = "skyblue", color = "black", 
+                   alpha = 0.7, bins = 100
+                   ) +
+    labs(title = "Distribution of Asset Turnover for Sample of Large ASX Companies in 2024", 
+         x = "Asset Turnover", 
+         y = "Frequency"
+         ) + 
+    theme_minimal()
 
-profit_margin_hist <- firm_strategy |>
-  filter(profit_margin > -2) |>
-  ggplot(aes(x = profit_margin)) + 
-  geom_histogram(fill = "darkorange", color = "black", alpha = 0.7, bins = 100) +  
-  labs(title = "Distribution of Profit Margin for Sample of Large ASX Companies in 2024", 
+profit_margin_hist <- 
+    firm_strategy |>
+    filter(profit_margin > -2) |>
+    ggplot(aes(x = profit_margin)) + 
+    geom_histogram(fill = "darkorange", color = "black", 
+                   alpha = 0.7, bins = 100
+                   ) +  
+    labs(title = "Distribution of Profit Margin for Sample of Large ASX Companies in 2024", 
        x = "Profit Margin", 
        y = "Frequency") + 
-  theme_minimal() 
+    theme_minimal() 
 
 asset_turnover_hist / profit_margin_hist
 ```
 
-**(a).** Before creating these plots yourself, let's think about what we can learn from them. Based on the above, what is the profit margin of the typical firm in our sample? How about asset turnover? Given what you know about the types of firm strategy, how do you expect a firm's position in one distribution to relate to its position in the other distribution?
+**(a).** Before creating these plots yourself, let's think about what we can learn from them. Based on the figure above, what is the profit margin of the typical firm in our sample? How about asset turnover? Given what you know about the types of firm strategy, how do you expect a firm's position in profit margin distribution to relate to its position in the asset turnover distribution?
 
 **(b).** Let's get started on building these plots. First, we need to create two new variables-`profit_margin`, and `asset_turnover`-and store these in a new data frame (which we will use for the rest of this week's exercises). As we did in the lecture, we will also create our measure of firm profitability-`roic`-so that we can study returns in subsequent exercises. Use the starter code below to create these variables. Replace `FUNCTION_NAME` and `YOUR_VARIABLE_NAME` with the appropriate function and variable names.
 
 ```{r, eval=FALSE}
-firm_strategy <- asx_200_2024 |>
-  FUNCTION_NAME(invested_capital > 0 & at > 0 & sale > 0) |> # Drop observations where we would have to divide by zero when calculating our new variables
-  FUNCTION_NAME(roic = YOUR_VARIABLE_NAME/YOUR_VARIABLE_NAME, # Create new variables
-         profit_margin = YOUR_VARIABLE_NAME/YOUR_VARIABLE_NAME,
-         asset_turnover = YOUR_VARIABLE_NAME/YOUR_VARIABLE_NAME)
+firm_strategy <- 
+    asx_200_2024 |>
+    # Drop observations where we would have to divide by zero when calculating our new variables
+    FUNCTION_NAME(invested_capital > 0 & at > 0 & sale > 0) |>
+    # Create new variables
+    FUNCTION_NAME(
+        roic = YOUR_VARIABLE_NAME / YOUR_VARIABLE_NAME,
+        profit_margin = YOUR_VARIABLE_NAME / YOUR_VARIABLE_NAME,
+        asset_turnover = YOUR_VARIABLE_NAME / YOUR_VARIABLE_NAME
+        )
 ```
 
 **(c).** Next, we want to check that we have correctly created these new variables, `profit_margin`, and `asset_turnover`. To do so, create a short, narrow table that focuses on these variables and their components for a small subset of firms in our sample (in this case, the first 10 observations). Using this table, we can then visually check that each variable is calculated as per the formula above. Use the starter code below to create and display such a table. Replace `YOUR_DATAFRAME_NAME` and `YOUR_FUNCTION_NAME` with the appropriate data frame and function names.
 
 ```{r, eval=FALSE}
 YOUR_DATAFRAME_NAME |>
-  YOUR_FUNCTION_NAME(conml, ebit, at, sale, profit_margin, asset_turnover) |>
-  YOUR_FUNCTION_NAME(10) 
+    YOUR_FUNCTION_NAME(conml, ebit, at, sale, profit_margin, asset_turnover) |>
+    YOUR_FUNCTION_NAME(10) 
 ```
 
 Your table should look like this:
 
 ```{r, echo=FALSE}
 firm_strategy |>
-  select(conml, ebit, at, sale, profit_margin, asset_turnover) |>
-  head(10) 
+    select(conml, ebit, at, sale, profit_margin, asset_turnover) |>
+    head(10) 
 ```
 
 **(d).** Now, we can plot `profit_margin`, and `asset_turnover` and see how they behave for our sample of firms. To do so, we will first create a basic histogram that visualizes the distribution of `profit_margin`. Use the starter code below to produce this plot. Replace `YOUR_DATAFRAME_NAME`, `YOUR_FUNCTION_NAME` and `YOUR_VARIABLE` with the appropriate data frame, function, and variable names.
 
 ```{r, eval=FALSE}
 YOUR_DATAFRAME_NAME |>
-  YOUR_FUNCTION_NAME(aes(x = YOUR_VARIABLE)) + 
-  YOUR_FUNCTION_NAME(fill = "darkorange", color = "black", alpha = 0.7, bins = 100) +
-  labs(title = "Distribution of Profit Margin for Sample of Large ASX Companies in 2024",  
-       x = YOUR_LABEL,  
-       y = YOUR_LABEL) +  
-  theme_minimal() 
+    YOUR_FUNCTION_NAME(aes(x = YOUR_VARIABLE)) + 
+    YOUR_FUNCTION_NAME(fill = "darkorange", color = "black", 
+                       alpha = 0.7, bins = 100) +
+    labs(title = "Distribution of Profit Margin for Sample of Large ASX Companies in 2024",  
+         x = YOUR_LABEL,  
+         y = YOUR_LABEL
+         ) +  
+    theme_minimal() 
 ```
 
 Your plot should look like this:
 
 ```{r, echo=FALSE, warning=FALSE}
 firm_strategy |>
-  ggplot(aes(x = profit_margin)) + 
-  geom_histogram(fill = "darkorange", color = "black", alpha = 0.7, bins = 100) +
-  labs(title = "Distribution of Profit Margin for Sample of Large ASX Companies in 2024",  
-       x = "Profit Margin",  
-       y = "Frequency") +  
-  theme_minimal() 
+    ggplot(aes(x = profit_margin)) + 
+    geom_histogram(fill = "darkorange", color = "black", 
+                   alpha = 0.7, bins = 100) +
+    labs(title = "Distribution of Profit Margin for Sample of Large ASX Companies in 2024",  
+         x = "Profit Margin",  
+         y = "Frequency"
+         ) +  
+    theme_minimal() 
 ```
 
 **(e).** Oops! Examining this histogram plot, what issue do you notice with the data that complicates plotting the distribution of `profit_margin`? How do you suggest we address this issue in the data, and what do we gain and lose by doing so?
@@ -94,14 +113,15 @@ firm_strategy |>
 **(f).** Now, let's move on to our other new variable. Let's create a basic histogram that visualizes the distribution of `asset_turnover`. Use the starter code below to produce this plot. Replace `YOUR_DATAFRAME_NAME`, `YOUR_FUNCTION_NAME` and `YOUR_VARIABLE` with the appropriate data frame, function, and variable names.
 
 ```{r, eval=FALSE}
-
 YOUR_DATAFRAME_NAME |>
-  YOUR_FUNCTION_NAME(aes(x = YOUR_VARIABLE)) + 
-  YOUR_FUNCTION_NAME(fill = "skyblue", color = "black", alpha = 0.7, bins = 100) +
-  labs(title = "Distribution of Asset Turnover for Sample of Large ASX Companies in 2024", 
-       x = YOUR_LABEL,  
-       y = YOUR_LABEL) +  
-  theme_minimal() 
+    YOUR_FUNCTION_NAME(aes(x = YOUR_VARIABLE)) + 
+    YOUR_FUNCTION_NAME(fill = "skyblue", color = "black", 
+                       alpha = 0.7, bins = 100) +
+    labs(title = "Distribution of Asset Turnover for Sample of Large ASX Companies in 2024", 
+         x = YOUR_LABEL,  
+         y = YOUR_LABEL
+         ) +  
+    theme_minimal() 
   
 ```
 
@@ -111,7 +131,8 @@ Your plot should look like this:
 
 firm_strategy |> 
   ggplot(aes(x = asset_turnover)) + 
-  geom_histogram(fill = "skyblue", color = "black", alpha = 0.7, bins = 100) +
+  geom_histogram(fill = "skyblue", color = "black", 
+                 alpha = 0.7, bins = 100) +
   labs(title = "Distribution of Asset Turnover for Sample of Large ASX Companies in 2024", 
        x = "Asset Turnover", 
        y = "Frequency") + 
@@ -189,11 +210,14 @@ In the high volume vs. high margin strategic framework, we’d expect a firm’s
 Here's the updated code:
 
 ```{r}
-firm_strategy <- asx_200_2024 |>
-  filter(invested_capital > 0 & at > 0 & sale > 0) |>
-  mutate(roic = ebit/invested_capital, 
-         profit_margin = ebit/sale,
-         asset_turnover = sale/at)
+firm_strategy <- 
+    asx_200_2024 |>
+    filter(invested_capital > 0 & at > 0 & sale > 0) |>
+    mutate(
+        roic = ebit / invested_capital, 
+        profit_margin = ebit / sale,
+        asset_turnover = sale / at
+        )
 ```
 
 **(c). The short, narrow table to show new variables**
@@ -202,8 +226,8 @@ Here's the updated code:
 
 ```{r}
 firm_strategy |>
-  select(conml, ebit, at, sale, profit_margin, asset_turnover) |>
-  head(10) 
+    select(conml, ebit, at, sale, profit_margin, asset_turnover) |>
+    head(10) 
 ```
 
 **(d).  Profit margin histogram **
@@ -214,19 +238,20 @@ Here's the updated code:
 #| warning: false
 
 firm_strategy |>
-  ggplot(aes(x = profit_margin)) + 
-  geom_histogram(fill = "darkorange", color = "black", alpha = 0.7, bins = 100) +
-  labs(title = "Distribution of Profit Margin for Sample of Large ASX Companies in 2024",  
-       x = "Profit Margin",  
-       y = "Frequency") +  
-  theme_minimal() 
+    ggplot(aes(x = profit_margin)) + 
+    geom_histogram(fill = "darkorange", color = "black", 
+                   alpha = 0.7, bins = 100) +
+    labs(title = "Distribution of Profit Margin for Sample of Large ASX Companies in 2024",  
+         x = "Profit Margin",  
+         y = "Frequency") +  
+    theme_minimal() 
 ```
 
 **(e).  Stretching outliers and squeezed histograms**
 
 The histogram of profit margin shows a very long left tail, with a few firms having very negative profit margins. The presence of these extreme outliers stretches the x-axis scale, compressing the rest of our sample into a single bin. This is an issue because we are not able to see how profit margins vary for the vast majority of firms in our sample-i.e., we lose resolution in the region where most data points fall. In other words, the outliers dominate the scale, and the bulk of the distribution looks compressed and uninformative.
 
-For purely mechanical reasons, outliers are an issue for a variable such as profit margin. Because the denominator (sales) can be small and the numerator (profit) can be negative, profit margin can easily 'blow up'. When sales are tiny, a moderate loss leads to a very large negative ratio. Thexe values create long left tails, making the histogram compress most observations into a tiny vertical slither at the right tail.
+For purely mechanical reasons, outliers are an issue for a variable such as profit margin. Because the denominator (sales) can be small and the numerator (profit) can be negative, profit margin can easily 'blow up'. When sales are tiny, a moderate loss leads to a very large negative ratio. These values create long left tails, making the histogram compress most observations into a tiny vertical slither at the right tail.
 
 One way to address this issue is to remove or cap extreme outliers before plotting. For example, we could filter out observations where profit margin is below a certain threshold (e.g., −10), or we could winsorise the data by replacing extreme values with the nearest acceptable cutoff. The benefits of doing is that it allows us to see the bulk of the distribution more clearly, as we can focus on the region where most firms fall. The downside is that we lose information about the extreme values, which may be important for understanding certain firms' strategies or financial health. The trade-off is between clarity of the main pattern and completeness of the extreme cases.
 
@@ -238,12 +263,13 @@ Here's the updated code:
 #| warning: false
 
 firm_strategy |> 
-  ggplot(aes(x = asset_turnover)) + 
-  geom_histogram(fill = "skyblue", color = "black", alpha = 0.7, bins = 100) +
-  labs(title = "Distribution of Asset Turnover for Sample of Large ASX Companies in 2024", 
-       x = "Asset Turnover", 
-       y = "Frequency") + 
-  theme_minimal()
+    ggplot(aes(x = asset_turnover)) + 
+    geom_histogram(fill = "skyblue", color = "black", 
+                 alpha = 0.7, bins = 100) +
+    labs(title = "Distribution of Asset Turnover for Sample of Large ASX Companies in 2024", 
+         x = "Asset Turnover", 
+         y = "Frequency") + 
+    theme_minimal()
 ```
 
 **(g).  Lower bounds, well-behaved ratios, and 'nice' histograms **

@@ -5,15 +5,29 @@ Our objective is to create the following plot:
 
 ```{r, echo = FALSE, warning=FALSE}
 firm_strategy |>
-  filter(profit_margin > -2) |> # To improve our visualization, we need to focus on representative firms and drop outliers (see exercises 1 & 4 for more)
-  ggplot() + 
-    geom_point(aes(y = profit_margin, x = asset_turnover), alpha = 0.3) + 
-    geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) + # Add a vertical line to show median value
-    geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) +  # Add a horizontal line to show median value
+     #To improve our visualization, we need to focus on representative 
+    # firms and drop outliers (see exercises 1 & 4 for more)
+    filter(profit_margin > -2) |>
+    ggplot() + 
+    geom_point(aes(y = profit_margin, x = asset_turnover), 
+               alpha = 0.3
+               ) + 
+     # Add a vertical line to show median value
+    geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
+               linetype = "dashed", 
+               color = "blue", 
+               size = 1
+               ) +
+    # Add a horizontal line to show median value
+    geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
+               linetype = "dashed", 
+               color = "blue", 
+               size = 1
+               ) +  
     theme_minimal() + 
     labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
-       x = "Asset Turnover", 
-       y = "Profit Margin") + 
+         x = "Asset Turnover", 
+         y = "Profit Margin") + 
     guides(color = guide_legend(title = NULL))
 ```
 
@@ -23,20 +37,24 @@ To help, we have included the table that your code should output for `profit_mar
 
 ```{r, echo=FALSE}
 firm_strategy |>
-  slice_max(profit_margin, n = 5) |>
-  select(conml, industry, ebit, at, sale, profit_margin, asset_turnover, roic)
+    slice_max(profit_margin, n = 5) |>
+    select(conml, industry, ebit, at, sale, profit_margin, asset_turnover, roic)
 ```
 
 ```{r, eval=FALSE}
-firm_strategy |> # Replicate the profit margin table
-  slice_max(YOUR_VARIABLE_NAME, n = 5) |> # slice_max is a concise alternative to using arrange() then head()
-  select(YOUR_VARIABLE_NAME, ..., YOUR_VARIABLE_NAME)
+# Replicate the profit margin table
+firm_strategy |> 
+    # slice_max is a concise alternative to using arrange() then head()
+    slice_max(YOUR_VARIABLE_NAME, n = 5) |> 
+    select(YOUR_VARIABLE_NAME, ..., YOUR_VARIABLE_NAME)
 ```
 
 ```{r, eval=FALSE}
-firm_strategy |> # Produce the equivalent table for asset turnover
-  slice_max(YOUR_VARIABLE_NAME, n = 5) |> # slice_max is a concise alternative to using arrange() then head()
-  select(YOUR_VARIABLE_NAME, ..., YOUR_VARIABLE_NAME)
+# Produce the equivalent table for asset turnover
+firm_strategy |> 
+    # slice_max is a concise alternative to using arrange() then head()
+    slice_max(YOUR_VARIABLE_NAME, n = 5) |> 
+    select(YOUR_VARIABLE_NAME, ..., YOUR_VARIABLE_NAME)
 ```
 
 **(b).**  Do we observe differences in industries or firm size across these tables? Are the same or different firms present across these tables? How do profit margin and asset turnover appear to be related and what does this reveal about firm strategy?
@@ -55,61 +73,67 @@ Some firms may fail to meet the conditions for either of these categories. Class
 Use the starter code below to create the variable `strategy_type` and so classify each firm's strategy type. Replace `YOUR_DATAFRAME`, `YOUR_FUNCTION_NAME` and `YOUR_VARIABLE_NAME` as appropriate.
 
 ```{r eval=FALSE}
-YOUR_DATAFRAME <- YOUR_DATAFRAME |>
-  YOUR_FUNCTION_NAME(
-    strategy_type = NA_character_,  # Initialize the column as NA first (we need to create an 'empty' column that we can then populate)
-    strategy_type = ifelse(
-      profit_margin >= median(profit_margin, na.rm = TRUE) & 
-      asset_turnover < median(asset_turnover, na.rm = TRUE), 
-      'High margin', strategy_type),
-    YOUR_VARIABLE_NAME = ifelse(
-      YOUR_VARIABLE_NAME < median(YOUR_VARIABLE_NAME, na.rm = TRUE) & 
-      YOUR_VARIABLE_NAME >= median(YOUR_VARIABLE_NAME, na.rm = TRUE), 
-      'YOUR_STRATEGY_TYPE', strategy_type),
-    YOUR_VARIABLE_NAME = ifelse(
-      YOUR_VARIABLE_NAME < median(YOUR_VARIABLE_NAME, na.rm = TRUE) & 
-      YOUR_VARIABLE_NAME < median(YOUR_VARIABLE_NAME, na.rm = TRUE), 
-      'YOUR_STRATEGY_TYPE', strategy_type),
-    YOUR_VARIABLE_NAME = ifelse(
-      YOUR_VARIABLE_NAME >= median(YOUR_VARIABLE_NAME, na.rm = TRUE) & 
-      YOUR_VARIABLE_NAME >= median(YOUR_VARIABLE_NAME, na.rm = TRUE), 
-      'YOUR_STRATEGY_TYPE', strategy_type)
+YOUR_DATAFRAME <- 
+    firm_strategy |>
+    YOUR_FUNCTION_NAME(
+        strategy_type = case_when(
+            # Case 1: High Margin
+            profit_margin >= median(profit_margin, na.rm = TRUE) &
+            asset_turnover < median(asset_turnover, na.rm = TRUE) ~ "High margin",
+            # Case 2: High Volume      
+            YOUR_VARIABLE_NAME < median(YOUR_VARIABLE_NAME, na.rm = TRUE) &
+            YOUR_VARIABLE_NAME >= median(YOUR_VARIABLE_NAME, na.rm = TRUE) ~ "High volume",
+            # Case 3: Sinking Ship
+            YOUR_VARIABLE_NAME < median(YOUR_VARIABLE_NAME, na.rm = TRUE) &
+            YOUR_VARIABLE_NAME < median(YOUR_VARIABLE_NAME, na.rm = TRUE) ~ "Sinking ship",
+            # Case 4: Superstar
+            YOUR_VARIABLE_NAME >= median(YOUR_VARIABLE_NAME, na.rm = TRUE) &
+            YOUR_VARIABLE_NAME >= median(YOUR_VARIABLE_NAME, na.rm = TRUE) ~ "Superstar",
+            # Default : catch any unmatched cases
+            .default = NA_character_  
+    )
   )
 ```
 
 ```{r echo=FALSE}
-firm_strategy <- firm_strategy |>
-  mutate(
-    strategy_type = NA_character_,  # Initialize the 'firm' column as NA first (we need to create an 'empty' column that we can then populate)
-    strategy_type = ifelse(
-      profit_margin >= median(profit_margin, na.rm = TRUE) & 
-      asset_turnover < median(asset_turnover, na.rm = TRUE), 
-      'High margin', strategy_type),
-    strategy_type = ifelse(
-      profit_margin < median(profit_margin, na.rm = TRUE) & 
-      asset_turnover >= median(asset_turnover, na.rm = TRUE), 
-      'High volume', strategy_type),
-    strategy_type = ifelse(
-      profit_margin < median(profit_margin, na.rm = TRUE) & 
-      asset_turnover < median(asset_turnover, na.rm = TRUE), 
-      'Sinking ship', strategy_type),
-    strategy_type = ifelse(
-      profit_margin >= median(profit_margin, na.rm = TRUE) & 
-      asset_turnover >= median(asset_turnover, na.rm = TRUE), 
-      'Superstar', strategy_type)
+firm_strategy <- 
+    firm_strategy |>
+    mutate(
+        strategy_type = case_when(
+            # Case 1: High Margin
+            profit_margin >= median(profit_margin, na.rm = TRUE) &
+            asset_turnover < median(asset_turnover, na.rm = TRUE) ~ "High margin",
+            # Case 2: High Volume      
+            profit_margin < median(profit_margin, na.rm = TRUE) &
+            asset_turnover >= median(asset_turnover, na.rm = TRUE) ~ "High volume",
+            # Case 3: Sinking Ship
+            profit_margin < median(profit_margin, na.rm = TRUE) &
+            asset_turnover < median(asset_turnover, na.rm = TRUE) ~ "Sinking ship",
+            # Case 4: Superstar
+            profit_margin >= median(profit_margin, na.rm = TRUE) &
+            asset_turnover >= median(asset_turnover, na.rm = TRUE) ~ "Superstar",
+            # Default : catch any unmatched cases
+            .default = NA_character_  
+    )
   )
+
 ```
 
 **(d).** To shed light on how the above 'works', run the code below and explain what each part of the code 'does' to the output. What must be the case for a firm's strategy type to be classified as 'High margin'? How is a firm's strategy type classified if this is not the case? What value does strategy type take if only one of these conditions holds?
 
 ```{r, eval=FALSE}
 firm_strategy |>
-  mutate(
-    strategy_type = NA_character_,  
-    strategy_type = ifelse(
-        profit_margin >= median(profit_margin, na.rm = TRUE) & 
-        asset_turnover < median(asset_turnover, na.rm = TRUE), 
-        'High margin', 'Other')) |>
+    mutate(
+        strategy_type = case_when(
+            # Case 1: 
+            profit_margin >= median(profit_margin, na.rm = TRUE) &
+                asset_turnover < median(asset_turnover, na.rm = TRUE) ~ "High margin",
+            # Case 2:
+            is.na(profit_margin) | is.na(asset_turnover) ~ NA_character_,
+            # Other cases -- the default:
+            .default = "Other"
+    )
+  ) |> 
   select(conml, profit_margin, asset_turnover, strategy_type) |>
   head(10)
 ```
@@ -118,32 +142,49 @@ firm_strategy |>
 
 ```{r, eval=FALSE}
 YOUR_DATAFRAME |>
-      filter(profit_margin > -2) |> # To improve our visualization, we need to focus on representative firms and drop outliers (see exercises 1 & 4 for more)
-      YOUR_FUNCTION_NAME() + 
-        YOUR_FUNCTION_NAME(aes(y = YOUR_VARIABLE_NAME, x = YOUR_VARIABLE_NAME), alpha = 0.3) +
-        geom_vline(xintercept = median(YOUR_DATAFRAME$YOUR_VARIABLE_NAME, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) + # Add a vertical line to show median value
-        geom_hline(yintercept = median(YOUR_DATAFRAME$YOUR_VARIABLE_NAME, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) +  # Add a horizontal line to show median value
-        theme_minimal() + 
-        labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
-           x = YOUR_LABEL, 
-           y = YOUR_LABEL) + 
-        guides(color = guide_legend(title = NULL))
+    # To improve our visualization, we need to focus on representative 
+    # firms and drop outliers (see exercises 1 & 4 for more)
+    filter(profit_margin > -2) |> 
+    YOUR_FUNCTION_NAME() + 
+    YOUR_FUNCTION_NAME(
+        aes(y = YOUR_VARIABLE_NAME, x = YOUR_VARIABLE_NAME), 
+            alpha = 0.3
+        ) +
+        # Add a vertical line to show median value
+    geom_vline(xintercept = median(YOUR_DATAFRAME$YOUR_VARIABLE_NAME, na.rm = TRUE), 
+               linetype = "dashed", color = "blue", size = 1
+        ) +
+        # Add a horizontal line to show median value
+    geom_hline(yintercept = median(YOUR_DATAFRAME$YOUR_VARIABLE_NAME, na.rm = TRUE), 
+               linetype = "dashed", color = "blue", size = 1
+        ) + 
+    theme_minimal() + 
+    labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
+         x = YOUR_LABEL, 
+         y = YOUR_LABEL
+         ) + 
+    guides(color = guide_legend(title = NULL))
 ```
 
 You plot should look like this:
 
 ```{r, echo=FALSE}
 firm_strategy |>
-      filter(profit_margin > -2) |> # To improve our visualization, we need to focus on representative firms and drop outliers (see exercises 1 & 4 for more)
-      ggplot() + 
-        geom_point(aes(y = profit_margin, x = asset_turnover), alpha = 0.3) + 
-        geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) + # Add a vertical line to show median value
-        geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) +  # Add a horizontal line to show median value
-        theme_minimal() + 
-        labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
-           x = "Asset Turnover", 
-           y = "Profit Margin") + 
-        guides(color = guide_legend(title = NULL))
+    filter(profit_margin > -2) |> # To improve our visualization, we need to focus on representative firms and drop outliers (see exercises 1 & 4 for more)
+    ggplot() + 
+    geom_point(aes(y = profit_margin, x = asset_turnover), 
+                   alpha = 0.3) + 
+    # Add a vertical line to show median value
+    geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
+               linetype = "dashed", color = "blue", size = 1) + 
+    # Add a horizontal line to show median value
+    geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
+               linetype = "dashed", color = "blue", size = 1) +  
+    theme_minimal() + 
+    labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
+         x = "Asset Turnover", 
+         y = "Profit Margin") + 
+    guides(color = guide_legend(title = NULL))
 ```
 
 **(f).** Nice! We can learn a lot from this plot, but to start let's return to an earlier question we considered: How do profit margin and asset turnover appear to be related and what does this reveal about firm strategy? Explain why we have few firms in the top right? And why we have few firms in the bottom left?
@@ -210,15 +251,15 @@ Here's the updated code:
 
 ```{r}
 firm_strategy |>
-  slice_max(profit_margin, n = 5) |> 
-  select(conml, industry, ebit, at, sale, profit_margin, asset_turnover, roic)
+    slice_max(profit_margin, n = 5) |> 
+    select(conml, industry, ebit, at, sale, profit_margin, asset_turnover, roic)
 ```
 
 ```{r}
 
 firm_strategy |>
-  slice_max(asset_turnover, n = 5) |> 
-  select(conml, industry, ebit, at, sale, profit_margin, asset_turnover, roic)
+    slice_max(asset_turnover, n = 5) |> 
+    select(conml, industry, ebit, at, sale, profit_margin, asset_turnover, roic)
 
 ```
 
@@ -235,52 +276,58 @@ No firms appear in both lists, highlighting that profit margin and asset turnove
 Here's the updated code:
 
 ```{r}
-firm_strategy <- firm_strategy |>
-  mutate(
-    strategy_type = NA_character_,  # Initialize the 'firm' column as NA first (we need to create an 'empty' column that we can then populate)
-    strategy_type = ifelse(
-      profit_margin >= median(profit_margin, na.rm = TRUE) & 
-      asset_turnover < median(asset_turnover, na.rm = TRUE), 
-      'High margin', strategy_type),
-    strategy_type = ifelse(
-      profit_margin < median(profit_margin, na.rm = TRUE) & 
-      asset_turnover >= median(asset_turnover, na.rm = TRUE), 
-      'High volume', strategy_type),
-    strategy_type = ifelse(
-      profit_margin < median(profit_margin, na.rm = TRUE) & 
-      asset_turnover < median(asset_turnover, na.rm = TRUE), 
-      'Sinking ship', strategy_type),
-    strategy_type = ifelse(
-      profit_margin >= median(profit_margin, na.rm = TRUE) & 
-      asset_turnover >= median(asset_turnover, na.rm = TRUE), 
-      'Superstar', strategy_type)
-)
+firm_strategy <- 
+    firm_strategy |>
+    mutate(
+        strategy_type = case_when(
+            # Case 1: High Margin
+            profit_margin >= median(profit_margin, na.rm = TRUE) &
+            asset_turnover < median(asset_turnover, na.rm = TRUE) ~ "High margin",
+            # Case 2: High Volume      
+            profit_margin < median(profit_margin, na.rm = TRUE) &
+            asset_turnover >= median(asset_turnover, na.rm = TRUE) ~ "High volume",
+            # Case 3: Sinking Ship
+            profit_margin < median(profit_margin, na.rm = TRUE) &
+            asset_turnover < median(asset_turnover, na.rm = TRUE) ~ "Sinking ship",
+            # Case 4: Superstar
+            profit_margin >= median(profit_margin, na.rm = TRUE) &
+            asset_turnover >= median(asset_turnover, na.rm = TRUE) ~ "Superstar",
+            # Default : catch any unmatched cases
+            .default = NA_character_  
+    )
+  )
 ```
 
 **(d). Using `ifelse` statements to create categorical variables**
 
 ```{r, eval=FALSE}
 firm_strategy |>
-  mutate(
-    strategy_type = NA_character_,  
-    strategy_type = ifelse(
-        profit_margin >= median(profit_margin, na.rm = TRUE) & 
-        asset_turnover < median(asset_turnover, na.rm = TRUE), 
-        'High margin', 'Other')) |>
+    mutate(
+        strategy_type = case_when(
+            # Case 1: 
+            profit_margin >= median(profit_margin, na.rm = TRUE) &
+                asset_turnover < median(asset_turnover, na.rm = TRUE) ~ "High margin",
+            # Case 2:
+            is.na(profit_margin) | is.na(asset_turnover) ~ NA_character_,
+            # Other cases -- the default:
+            .default = "Other"
+    )
+  ) |> 
   select(conml, profit_margin, asset_turnover, strategy_type) |>
   head(10)
 ```
 
 This code starts with the `firm_strategy` data frame and transforms it step-by-step.  
 
-1. `mutate(strategy_type = NA_character_)`  
-   Adds a new column, `strategy_type`, initially filled with `NA` (missing) values of type character.  
+1. The `mutate()` call creates a new column, strategy_type, using `case_when()` to assign a label based on each firm’s financial metrics. 
 
-2. The next `mutate` line uses `ifelse()` to assign `"High margin"` if two conditions are both true:  
-   * The firm's `profit_margin` is at least the median profit margin (ignoring missing values), and  
-   * The firm's `asset_turnover` is less than the median asset turnover (ignoring missing values).  
-
-   If either of these conditions is false, `"Other"` is assigned instead.  
+2. Case-wise Classification:
+    * Case 1 – "High margin": Assigned if both conditions are true:
+        - profit_margin is at least the median profit margin (ignoring missing values), and
+        - asset_turnover is less than the median asset turnover (ignoring missing values).
+    * Case 2 – Missing data: If either profit_margin or asset_turnover is missing, the result is set to `NA_character_`
+    * Case 3: Default case
+        - All other firms are assigned "Other" using the `.default` argument in `case_when()`
 
 3. `select(conml, profit_margin, asset_turnover, strategy_type)`  
    Keeps only the relevant columns in the output.  
@@ -298,16 +345,22 @@ Here's the updated code:
 
 ```{r}
 firm_strategy |>
-      filter(profit_margin > -2) |> # To improve our visualization, we need to focus on representative firms and drop outliers (see exercises 1 & 4 for more)
-      ggplot() + 
-        geom_point(aes(y = profit_margin, x = asset_turnover), alpha = 0.3) + 
-        geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) + # Add a vertical line to show median value
-        geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), linetype = "dashed", color = "blue", size = 1) +  # Add a horizontal line to show median value
-        theme_minimal() + 
-        labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
-           x = "Asset Turnover", 
-           y = "Profit Margin") + 
-        guides(color = guide_legend(title = NULL))
+    filter(profit_margin > -2) |>
+    ggplot() + 
+    geom_point(aes(y = profit_margin, x = asset_turnover), 
+               alpha = 0.3
+               ) + 
+    # Add a vertical line to show median value
+    geom_vline(xintercept = median(firm_strategy$asset_turnover, na.rm = TRUE), 
+               linetype = "dashed", color = "blue", size = 1) + 
+    # Add a horizontal line to show median value
+    geom_hline(yintercept = median(firm_strategy$profit_margin, na.rm = TRUE), 
+               linetype = "dashed", color = "blue", size = 1) +  
+    theme_minimal() + 
+    labs(title = "Variation in Firm Strategy Across A Sample of Large ASX Companies in 2024", 
+         x = "Asset Turnover", 
+         y = "Profit Margin") + 
+    guides(color = guide_legend(title = NULL))
 ```
 
 **(f). Firm strategy, trade-offs, and specialization**
